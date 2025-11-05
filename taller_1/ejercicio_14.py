@@ -1,21 +1,32 @@
+#En clase de programación, se sacan 4 notas del 15%,30%,30%,25% respectivamente. Se
+#pide diseñar un algoritmo que permita mostrar la nota definitiva de un estudiante.
+#Teniendo en cuenta que la primera nota consta del promedio de dos talleres, la segunda
+#de tres evaluaciones, la tercera nota de un trabajo final y la última es el promedio de 4
+#quizzes.
 
-t1 = float(input("Taller 1: "))
-t2 = float(input("Taller 2: "))
-prom_talleres = (t1 + t2) / 2
 
-e1 = float(input("Evaluación 1: "))
-e2 = float(input("Evaluación 2: "))
-e3 = float(input("Evaluación 3: "))
-prom_evaluaciones = (e1 + e2 + e3) / 3
+# primera nota: promedio de 2 talleres
+taller1 = float(input("Nota del taller 1 : "))
+taller2 = float(input("Nota del taller 2 : "))
+nota1 = (taller1 + taller2) / 2
 
-trabajo_final = float(input("Nota trabajo final: "))
+# segunda nota: promedio de 3 evaluaciones
+eval1 = float(input("Evaluación 1 : "))
+eval2 = float(input("Evaluación 2 : "))
+eval3 = float(input("Evaluación 3 : "))
+nota2 = (eval1 + eval2 + eval3) / 3
 
-q1 = float(input("Quiz 1: "))
-q2 = float(input("Quiz 2: "))
-q3 = float(input("Quiz 3: "))
-q4 = float(input("Quiz 4: "))
-prom_quiz = (q1 + q2 + q3 + q4) / 4
+# tercera nota: trabajo final
+nota3 = float(input("Nota del trabajo final: "))
 
-nota_final = (prom_talleres * 0.15) + (prom_evaluaciones * 0.30) + (trabajo_final * 0.30) + (prom_quiz * 0.25)
+# cuarta nota: promedio de 4 quizzes
+quiz1 = float(input("Quiz 1 : "))
+quiz2 = float(input("Quiz 2 : "))
+quiz3 = float(input("Quiz 3 : "))
+quiz4 = float(input("Quiz 4 : "))
+nota4 = (quiz1 + quiz2 + quiz3 + quiz4) / 4
 
-print(f"La nota definitiva es: {nota_final:.2f}")
+# nota definitiva
+nota_definitiva = (nota1 * 0.15) + (nota2 * 0.30) + (nota3 * 0.30) + (nota4 * 0.25)
+
+print(f"\nLa nota definitiva del estudiante es : {nota_definitiva:.2f}")

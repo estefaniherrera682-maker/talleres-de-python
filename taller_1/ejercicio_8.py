@@ -1,13 +1,23 @@
+#Un cliente de telefonía celular realiza cuatro llamadas: dos a un primer operador, y dos al
+#segundo operador. El cliente desea conocer el costo de cada llamada, El costo total de las
+#llamadas a cada operador, y el total de las cuatro llamadas.
 
-costo_op1_ll1 = float(input("Costo llamada 1 (operador 1): "))
-costo_op1_ll2 = float(input("Costo llamada 2 (operador 1): "))
-costo_op2_ll1 = float(input("Costo llamada 1 (operador 2): "))
-costo_op2_ll2 = float(input("Costo llamada 2 (operador 2): "))
 
-total_op1 = costo_op1_ll1 + costo_op1_ll2
-total_op2 = costo_op2_ll1 + costo_op2_ll2
+# llamadas al primer operador
+llamada1_op1 = float(input("Costo de la primera llamada al operador 1 : "))
+llamada2_op1 = float(input("Costo de la segunda llamada al operador 1 : "))
+
+# llamadas al segundo operador
+llamada1_op2 = float(input("Costo de la primera llamada al operador 2 : "))
+llamada2_op2 = float(input("Costo de la segunda llamada al operador 2 : "))
+
+# totales por operador
+total_op1 = llamada1_op1 + llamada2_op1
+total_op2 = llamada1_op2 + llamada2_op2
+
+# total general
 total_general = total_op1 + total_op2
 
-print(f"Total operador 1: ${total_op1:.2f}")
-print(f"Total operador 2: ${total_op2:.2f}")
-print(f"Total general: ${total_general:.2f}")
+print(f"\nTotal llamadas operador 1 : ${total_op1:.2f}")
+print(f"Total llamadas operador 2 : ${total_op2:.2f}")
+print(f"Total general de las cuatro llamadas : ${total_general:.2f}")
