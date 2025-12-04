@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ingresar</title>
+</head>
+
+<style>
+body{
+    background: rgb(194, 234, 245);
+    font-family:Arial;
+    margin:0;
+    padding:20px;
+    box-sizing:border-box;
+}
+.cuadro{
+    display:flex;
+    width:100%;
+    margin-top:20px;
+    justify-content:center;
+    gap:40px;
+}
+.lateral{
+    width:250px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    border:2px solid black;
+    box-sizing:border-box;
+}
+.principal{
+    flex:1;
+    min-width:600px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    border:2px solid black;
+    box-sizing:border-box;
+}
+.principal .acciones{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+button{
+    background:black;
+    color:#4fff;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    border:none;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+table, th, td{
+    border:1px solid black;
+}
+th, td{
+    padding:10px;
+    text-align:center;
+}
+#editor, #agregar{
+    margin-top:20px;
+    border:1px solid black;
+    padding:15px;
+    border-radius:10px;
+    background:#f5f5f5;
+    display:none;
+}
+#listaUsuariosUL{
+    list-style:none;
+    padding:0;
+    margin-top:10px;
+}
+#listaUsuariosUL li{
+    background:#e9f9f9;
+    margin-bottom:8px;
+    padding:8px;
+    border-radius:6px;
+    cursor:pointer;
+    border:1px solid #ccc;
+}
+#listaUsuariosUL li:hover{ background:#dff3f3; }
+.clic{ font-size:13px; color:#333; }
+</style>
+
+<body>
+
+<div class="cuadro">
+
+    <div class="lateral">
+        <img src="logo.pg.jpeg" style="width:100%; border-radius:10px; margin-bottom:12px;">
+        <button id="Lista">Lista Usuarios</button>
+        <button id="Backups">Backups</button>
+
+        <div id="panelLista" style="display:none; margin-top:12px;">
+            <p class="clic">Haz clic en un usuario para buscarlo:</p>
+            <ul id="listaUsuariosUL"></ul>
+        </div>
+    </div>
+
+    <div class="principal">
+
+        <div class="acciones">
+            <input id="Buscar" placeholder="Buscar usuario..." style="padding:6px; width:220px;">
+            <div style="margin-left:auto; display:flex; gap:8px;">
+                <button id="buscar">Buscar</button>
+                <button id="Agregar">Agregar</button>
+            </div>
+        </div>
+
+        <h2>Usuarios Registrados</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla"></tbody>
+        </table>
+
+        <div id="agregar">
+            <h3>Agregar Usuario</h3>
+            Usuario: <input id="usuario"><br><br>
+            Nombre: <input id="nombre"><br><br>
+            Correo: <input id="correo"><br><br>
+            Clave: <input id="clave" type="password"><br><br>
+
+            <button onclick="guardarNuevo()">Guardar</button>
+            <button onclick="cancelarAgregar()">Cancelar</button>
+        </div>
+
+        <div id="editor">
+            <h3>Editar Usuario</h3>
+            Usuario: <input id="usuario"><br><br>
+            Nombre: <input id="nombre"><br><br>
+            Correo: <input id="correo"><br><br>
+            Clave: <input id="clave" type="password"><br><br>
+
+            <button onclick="guardarEdicion()">Guardar</button>
+            <button onclick="cancelar()">Cancelar</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let indiceEdicionId = null;
+
+function obtenerUsuarios(){
+    return JSON.parse(localStorage.getItem("usuarios")) || [];
+}
+
+function guardarUsuariosEnLS(arr){
+    localStorage.setItem("usuarios", JSON.stringify(arr));
+}
+
+function cargarUsuarios(lista = null){
+    let usuarios = lista || obtenerUsuarios();
+    let tabla = document.getElementById("tabla");
+    tabla.innerHTML = "";
+
+    usuarios.forEach((u, i) => {
+        tabla.innerHTML += `
+        <tr>
+            <td>${i+1}</td>
+            <td>${u.usuario}</td>
+            <td>${u.nombre}</td>
+            <td>${u.correo}</td>
+            <td>
+                <button onclick="editar(${u.id})">Editar</button>
+                <button onclick="eliminarUsuario(${u.id})">Eliminar</button>
+            </td>
+        </tr>`;
+    });
+
+    actualizarListaLateral();
+}
+
+function actualizarListaLateral(){
+    let panel = document.getElementById("panelLista");
+    let ul = document.getElementById("listaUsuariosUL");
+    ul.innerHTML = "";
+
+    let usuarios = obtenerUsuarios();
+
+    usuarios.forEach(u => {
+        let li = document.createElement("li");
+        li.textContent = u.usuario;
+        li.onclick = () => {
+    
+            document.getElementById("Buscar").value = u.usuario;
+            buscarUsuario(u.usuario);
+        };
+        ul.appendChild(li);
+    });
+
+    if(usuarios.length === 0){
+        ul.innerHTML = '<li style="background:transparent;border:none;color:#666;">No hay usuarios</li>';
+    }
+}
+
+function eliminarUsuario(id){
+    let usuarios = obtenerUsuarios();
+    usuarios = usuarios.filter(u => u.id !== id);
+    guardarUsuariosEnLS(usuarios);
+    cargarUsuarios();
+}
+
+function editar(id){
+    let usuarios = obtenerUsuarios();
+    let u = usuarios.find(x => x.id === id);
+    if(!u) return alert("Usuario no encontrado");
+
+    indiceEdicionId = id;
+
+    document.getElementById("usuario").value = u.usuario;
+    document.getElementById("nombre").value  = u.nombre;
+    document.getElementById("correo").value  = u.correo;
+    document.getElementById("clave").value   = u.clave || "";
+
+    document.getElementById("editor").style.display = "block";
+    document.getElementById("agregar").style.display = "none";
+}
+
+function guardarEdicion(){
+    let usuarios = obtenerUsuarios();
+    let u = usuarios.find(x => x.id === indiceEdicionId);
+    if(!u) return alert("Error al guardar: usuario no encontrado");
+
+    u.usuario = document.getElementById("usuario").value.trim();
+    u.nombre  = document.getElementById("nombre").value.trim();
+    u.correo  = document.getElementById("correo").value.trim();
+    u.clave   = document.getElementById("clave").value;
+
+    guardarUsuariosEnLS(usuarios);
+    document.getElementById("editor").style.display = "none";
+    cargarUsuarios();
+}
+
+function cancelar(){
+    document.getElementById("editor").style.display = "none";
+}
+
+document.getElementById("Agregar").onclick = () => {
+    document.getElementById("agregar").style.display = "block";
+    document.getElementById("editor").style.display = "none";
+};
+
+function guardarNuevo(){
+    let usuario = document.getElementById("usuario").value.trim();
+    let nombre  = document.getElementById("nombre").value.trim();
+    let correo  = document.getElementById("correo").value.trim();
+    let clave   = document.getElementById("clave").value;
+
+    if(!usuario || !nombre || !correo || !clave){
+        alert("Todos los campos son obligatorios");
+        return;
+    }
+
+    let usuarios = obtenerUsuarios();
+
+    
+    let nuevo = {
+        id: Date.now() + Math.floor(Math.random()*1000),
+        usuario,
+        nombre,
+        correo,
+        clave
+    };
+
+    usuarios.push(nuevo);
+    guardarUsuariosEnLS(usuarios);
+
+    cancelarAgregar();
+    cargarUsuarios();
+}
+
+function cancelarAgregar(){
+    document.getElementById("agregar").style.display = "none";
+    document.getElementById("usuario").value = "";
+    document.getElementById("nombre").value = "";
+    document.getElementById("correo").value = "";
+    document.getElementById("clave").value = "";
+}
+
+function buscarUsuario(texto){
+    texto = String(texto || document.getElementById("Buscar").value || "").toLowerCase().trim();
+    let usuarios = obtenerUsuarios();
+
+    if(texto === ""){
+        cargarUsuarios();
+        return;
+    }
+
+    let filtrados = usuarios.filter(u =>
+        u.usuario.toLowerCase().includes(texto)
+        || (u.nombre && u.nombre.toLowerCase().includes(texto))
+        || (u.correo && u.correo.toLowerCase().includes(texto))
+    );
+
+    cargarUsuarios(filtrados);
+}
+document.getElementById("buscar").onclick = () => buscarUsuario();
+
+document.getElementById("Lista").onclick = () => {
+    let panel = document.getElementById("panelLista");
+    panel.style.display = panel.style.display === "block" ? "none" : "block";
+   
+    if(panel.style.display === "block") actualizarListaLateral();
+};
+
+document.getElementById("Backups").onclick = () => {
+    location.href = "backups.html";
+};
+
+function repararIDsBaseDatos() {
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    usuarios.forEach((u, index) => {
+        u.id = index + 1; 
+    });
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+}
+repararIDsBaseDatos();
+cargarUsuarios();
+guardarUsuariosEnLS(usuarios);
+
+</script>
+
+</body>
+</html>

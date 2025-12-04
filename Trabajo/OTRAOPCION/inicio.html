@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+</head>
+<style>
+     body{
+        front-family:Arial;
+        background-color: rgb(180, 236, 238);
+      text-align: center;
+      justify-content: center;
+      margin-top: 200px;
+     }
+     h2{
+        text-align: center;
+     }
+     input{
+        border-radius:5px;
+        padding: 5px;
+     }
+button{
+    border-radius: 4px;
+    padding: 3px;
+    background-color: black;
+    color:#4fff;
+}
+
+</style>
+
+<body>
+
+<h2>INICIAR SESION</h2>
+
+Nombre: <input id="nombre"><br><br>
+Clave: <input id="clave" type="password"><br><br>
+
+<button onclick="iniciar()">Iniciar Sesión</button>
+
+<br><br>
+<a href="registro.html">Ir a registro</a>
+
+<script>
+function iniciar() {
+    let nombre = document.getElementById("nombre").value;
+    let clave = document.getElementById("clave").value;
+
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    let encontrado = usuarios.find(u =>
+        u.nombre === nombre && u.clave === clave
+    );
+
+    if (encontrado) {
+        alert("Inicio de sesión exitoso");
+        window.location.href = "lista.html";
+    } else {
+        alert("Nombre o clave incorrectos");
+    }
+}
+</script>
+
+</body>
+</html>

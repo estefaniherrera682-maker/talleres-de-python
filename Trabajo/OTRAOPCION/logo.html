@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Backups de Usuarios</title>
+    <style>
+        body { background:#daf6ff; font-family: Arial; padding:20px; }
+        button { margin:5px; padding:10px; }
+        table { width:100%; background:white; margin-top:20px; }
+        th, td { padding:8px; border:1px solid black; }
+        th { background:#b7e7f7; }
+    </style>
+</head>
+<body>
+
+    <h1>Gestión de Backups</h1>
+
+    <button onclick="crearBackup()">Crear Backup</button>
+    <button onclick="document.getElementById('archivoBackup').click()">Restaurar Backup</button>
+    <button onclick="location.href='ingresar.html'">Volver</button>
+
+    <input type="file" id="archivoBackup" style="display:none" accept=".json" onchange="restaurarBackup(event)">
+
+    <h2>Historial de Backups</h2>
+
+
+    <script src="backups.js"></script>
+
+</table><table border="1">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre Backup</th>
+            <th>Fecha</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody id="tablaBackups"></tbody>
+</table>
+
+
+</body>
+</html>
+</html>
+

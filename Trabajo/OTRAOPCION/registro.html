@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+</head>
+<style>
+    body{
+        font-family:Arial;
+        background-color: rgb(180, 236, 238);
+        text-align: center;
+        margin-top: 200px;
+    }
+    input{
+        border-radius:5px;
+        padding: 5px;
+    }
+    button{
+        border-radius: 4px;
+        padding: 3px;
+        background-color: black;
+        color:#4fff;
+    }
+</style>
+
+<body>
+
+<h2>Formulario de Registro</h2>
+
+<input id="usuario" placeholder="usuario"><br><br>
+<input id="nombre" placeholder="nombre"><br><br>
+<input id="telefono" placeholder="telefono"><br><br>
+<input id="correo" placeholder="email"><br><br>
+<input id="clave" placeholder="contraseña"><br><br>
+
+<button onclick="guardar()">Guardar</button>
+
+<br><br>
+<a href="inicio.html">Ir a iniciar sesión</a>
+
+<script>
+function guardar() {
+    let usuario = document.getElementById("usuario").value.trim();
+    let nombre = document.getElementById("nombre").value.trim();
+    let telefono = document.getElementById("telefono").value.trim();
+    let correo = document.getElementById("correo").value.trim();
+    let clave = document.getElementById("clave").value.trim();
+
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    let idActual = parseInt(localStorage.getItem("lastID")) || 0;
+
+    // Validar repetidos
+    let existe = usuarios.some(u => 
+        u.usuario === usuario || 
+        u.nombre === nombre || 
+        u.correo === correo
+    );
+
+    if (existe) {
+        alert("Ya existe un usuario con ese nombre o correo");
+        return;
+    }
+
+    // Crear ID incrementando +1
+    let nuevoID = idActual + 1;
+    localStorage.setItem("lastID", nuevoID);
+
+    // Agregar usuario
+    usuarios.push({
+        id: nuevoID,
+        usuario,
+        nombre,
+        telefono,
+        correo,
+        clave
+    });
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    alert("Usuario registrado con éxito");
+}
+</script>
+
+</body>
+</html>

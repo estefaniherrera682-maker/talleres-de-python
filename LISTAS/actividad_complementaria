@@ -1,0 +1,50 @@
+
+#Venta de boletas para un concierto
+
+# Lista donde se guardarán las cédulas que ya compraron boleta
+lista_cedulas = []
+
+# Cantidad total de boletas disponibles
+boletas_disponibles = 20
+
+print("=== VENTA DE BOLETAS EN LÍNEA ===")
+print("Boletas iniciales:", boletas_disponibles)
+print("----------------------------------")
+
+
+while boletas_disponibles > 0:
+
+    # Leer cédula del comprador
+    cedula = input("Ingrese su cédula para comprar boleta: ")
+
+    # verificar si ya existe en la lista
+    if cedula in lista_cedulas:
+        print("Esta cédula ya compró. No puede comprar de nuevo.")
+        continue
+
+    # agregar la cédula a la lista 
+    lista_cedulas.append(cedula)
+
+    # preguntar cuántas boletas compra
+    cantidad = int(input("¿Cuántas boletas desea comprar? (máximo 4): "))
+
+    # Validar máxima compra permitida
+    if cantidad < 1 or cantidad > 4:
+        print("Solo puede comprar entre 1 y 4 boletas.")
+        lista_cedulas.remove(cedula)  # quitar la cédula porque no compró
+        continue
+
+    # Validar disponibilidad
+    if cantidad > boletas_disponibles:
+        print("No hay suficientes boletas disponibles.")
+        lista_cedulas.remove(cedula)  
+        continue
+
+    # Restar boletas del total
+    boletas_disponibles -= cantidad
+
+    print(" Compra realizada correctamente.")
+    print("Boletas restantes:", boletas_disponibles)
+
+# Cuando el ciclo termina
+print("Boletas agotadas. Fin de la venta.")
